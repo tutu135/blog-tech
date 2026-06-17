@@ -1,0 +1,290 @@
+---
+import { getCollection } from 'astro:content';
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import ColumnCard from '../components/cards/ColumnCard.astro';
+import Icon from '../components/ui/Icon.astro';
+import ProfileNav from '../components/widgets/ProfileNav.astro';
+import HeroSticker from '../components/widgets/HeroSticker.astro';
+import GreetingWidget from '../components/widgets/GreetingWidget.astro';
+import ClockWidget from '../components/widgets/ClockWidget.astro';
+import CalendarWidget from '../components/widgets/CalendarWidget.astro';
+import SocialDock from '../components/widgets/SocialDock.astro';
+import LatestArticleWidget from '../components/widgets/LatestArticleWidget.astro';
+import RecommendationWidget from '../components/widgets/RecommendationWidget.astro';
+import MusicWidget from '../components/widgets/MusicWidget.astro';
+import FloatingLike from '../components/widgets/FloatingLike.astro';
+import { dashboard, site } from '../data/site';
+
+const columns = (await getCollection('columns')).sort(
+  (a, b) => Number(b.data.year) - Number(a.data.year),
+);
+
+const articles = (await getCollection('articles')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const latestArticle = articles[0];
+---
+
+<DashboardLayout title={`${site.name} · ${site.title}`}>
+  <div class="dashboard-board">
+    <div class="profile-slot">
+      <ProfileNav />
+    </div>
+
+    <div class="hero-slot">
+      <HeroSticker />
+    </div>
+
+    <div class="write-slot">
+      <a class="write-action" href={dashboard.writingHref}>
+        <Icon name="pencil" />
+        <span>写文章</span>
+      </a>
+      <div class="dot-grid" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="hello-slot">
+      <GreetingWidget />
+    </div>
+
+    <div class="clock-slot">
+      <ClockWidget />
+    </div>
+
+    <div class="latest-slot">
+      <LatestArticleWidget article={latestArticle} />
+    </div>
+
+    <div class="calendar-slot">
+      <CalendarWidget />
+    </div>
+
+    <div class="social-slot">
+      <SocialDock />
+    </div>
+
+    <div class="recommend-slot">
+      <RecommendationWidget />
+    </div>
+
+    <div class="music-slot">
+      <MusicWidget />
+    </div>
+
+    <div class="like-slot">
+      <FloatingLike />
+    </div>
+  </div>
+
+  <section id="columns" class="columns-section">
+    <div class="section-head">
+      <div>
+        <span>PROJECTS</span>
+        <h2>我的项目与专栏</h2>
+      </div>
+      <p>保留原来玻璃卡片的配色和鼠标交互，把内容入口整理成更稳定的卡片网格。</p>
+    </div>
+
+    <div class="columns-grid">
+      {columns.map((column) => (
+        <ColumnCard
+          href={`/columns/${column.id}/`}
+          icon={column.data.icon}
+          title={column.data.title}
+          meta={column.data.year}
+          tag={column.data.tag}
+          description={column.data.summary}
+          transitionName={`column-${column.id}`}
+        />
+      ))}
+    </div>
+  </section>
+</DashboardLayout>
+
+<style>
+  .dashboard-board {
+    display: grid;
+    max-width: var(--dashboard-width);
+    margin: 0 auto;
+    grid-template-columns: minmax(270px, 330px) minmax(360px, 1fr) minmax(260px, 330px);
+    grid-template-areas:
+      'profile hero write'
+      'profile hello clock'
+      'latest hello calendar'
+      'latest social calendar'
+      '. recommend music'
+      '. recommend like';
+    gap: 24px;
+    align-items: start;
+  }
+
+  .dashboard-board > * {
+    min-width: 0;
+  }
+
+  .profile-slot { grid-area: profile; }
+  .hero-slot { grid-area: hero; }
+  .write-slot { grid-area: write; }
+  .hello-slot { grid-area: hello; }
+  .clock-slot { grid-area: clock; }
+  .latest-slot { grid-area: latest; }
+  .calendar-slot { grid-area: calendar; }
+  .social-slot { grid-area: social; }
+  .recommend-slot { grid-area: recommend; }
+  .music-slot { grid-area: music; align-self: end; }
+  .like-slot { grid-area: like; justify-self: start; }
+
+  .write-slot {
+    display: flex;
+    min-height: 64px;
+    align-items: center;
+    gap: 30px;
+    padding-top: 6px;
+  }
+
+  .write-action {
+    display: inline-flex;
+    min-height: 54px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 28px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #43d4c4, #2ebaaa);
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 14px 28px rgba(53, 199, 182, 0.22);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .write-action:hover {
+    box-shadow: 0 18px 36px rgba(53, 199, 182, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .dot-grid {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    grid-template-columns: repeat(3, 4px);
+    grid-auto-rows: 4px;
+    gap: 7px;
+    place-content: center;
+  }
+
+  .dot-grid span {
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .columns-section {
+    max-width: var(--dashboard-width);
+    margin: 74px auto 0;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 24px;
+  }
+
+  .section-head span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-accent-strong);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .section-head h2 {
+    color: var(--color-ink-strong);
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .section-head p {
+    max-width: 420px;
+    color: var(--color-muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .columns-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  @media (max-width: 1120px) {
+    .dashboard-board {
+      max-width: 840px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        'hero hero'
+        'profile hello'
+        'latest clock'
+        'social calendar'
+        'recommend calendar'
+        'write music'
+        'like like';
+    }
+
+    .write-slot {
+      padding-top: 0;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .dashboard-board {
+      max-width: 520px;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'hero'
+        'profile'
+        'hello'
+        'write'
+        'clock'
+        'calendar'
+        'latest'
+        'social'
+        'recommend'
+        'music'
+        'like';
+      gap: 18px;
+    }
+
+    .write-slot {
+      justify-content: space-between;
+    }
+
+    .section-head {
+      display: block;
+    }
+
+    .section-head p {
+      margin-top: 12px;
+    }
+
+    .columns-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .write-action {
+      min-height: 50px;
+      padding: 0 20px;
+      font-size: 15px;
+    }
+  }
+</style>

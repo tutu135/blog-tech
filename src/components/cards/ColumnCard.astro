@@ -1,0 +1,147 @@
+---
+interface Props {
+  href: string;
+  icon: string;
+  title: string;
+  meta?: string;
+  tag?: string;
+  description: string;
+  transitionName?: string;
+}
+
+const { href, icon, title, meta, tag, description, transitionName } = Astro.props;
+---
+
+<a href={href} class="column-card card tilt-card" transition:name={transitionName}>
+  <div class="card-top">
+    <div class="logo" set:html={icon.replace(/\n/g, '<br>')} />
+    <div class="title-block">
+      <div class="title-row">
+        <span class="title">{title}</span>
+        {meta && <span class="year">{meta}</span>}
+      </div>
+      {tag && <span class="tag">{tag}</span>}
+    </div>
+  </div>
+  <div class="desc">{description}</div>
+  <div class="btn">查看 <span aria-hidden="true">&rarr;</span></div>
+</a>
+
+<style>
+  .column-card {
+    position: relative;
+    display: block;
+    min-height: 220px;
+    padding: 28px;
+    border: 1px solid var(--glass-border);
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.42);
+    box-shadow: var(--shadow-soft);
+    color: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    text-decoration: none;
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .logo {
+    display: flex;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.7);
+    color: #7a554a;
+    font-family: var(--font-hand);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.15;
+    text-align: center;
+    transition: transform 0.35s ease;
+  }
+
+  .column-card:hover .logo {
+    transform: scale(1.08) rotate(-2deg);
+  }
+
+  .title-block {
+    min-width: 0;
+    padding-top: 2px;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .title {
+    color: var(--color-ink-strong);
+    font-size: 19px;
+    font-weight: 700;
+  }
+
+  .year {
+    color: var(--color-muted);
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .tag {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 12px;
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.55);
+    color: #4a5d52;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .desc {
+    margin-bottom: 22px;
+    color: #54635a;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    color: #2f4438;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .column-card:hover .btn {
+    background: rgba(255, 255, 255, 0.85);
+    transform: translateX(2px);
+  }
+
+  @media (max-width: 640px) {
+    .column-card {
+      min-height: 0;
+      padding: 24px;
+    }
+  }
+</style>

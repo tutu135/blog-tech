@@ -1,0 +1,51 @@
+---
+import Icon from '../ui/Icon.astro';
+import { dashboard } from '../../data/site';
+---
+
+<div class="floating-like">
+  <span>{dashboard.likes}</span>
+  <button type="button" aria-label="喜欢">
+    <Icon name="heart" />
+  </button>
+</div>
+
+<style>
+  .floating-like {
+    display: grid;
+    width: 78px;
+    justify-items: center;
+  }
+
+  .floating-like span {
+    position: relative;
+    z-index: 2;
+    margin-bottom: -9px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(197, 203, 220, 0.68);
+    color: white;
+    font-size: 13px;
+  }
+
+  button {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.48);
+    color: #ffb8c8;
+    cursor: pointer;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+
+  button:hover {
+    background: rgba(255, 255, 255, 0.74);
+    transform: translateY(-2px);
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+import Icon from '../ui/Icon.astro';
+import { site } from '../../data/site';
+---
+
+<div class="social-dock" aria-label="社交链接">
+  {site.socials.map((social) => {
+    const external = social.href.startsWith('http');
+    return (
+      <a
+        class:list={['social-link', social.featured && 'is-featured']}
+        href={social.href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noreferrer' : undefined}
+        aria-label={social.label}
+      >
+        <Icon name={social.icon} />
+        <span>{social.label}</span>
+      </a>
+    );
+  })}
+</div>
+
+<style>
+  .social-dock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: inline-flex;
+    min-height: 50px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 18px;
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--color-ink);
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+
+  .social-link:hover {
+    background: rgba(255, 255, 255, 0.78);
+    transform: translateY(-2px);
+  }
+
+  .social-link.is-featured {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: #151817;
+    color: #fff;
+    box-shadow: 0 14px 28px rgba(20, 28, 27, 0.24);
+  }
+
+  .social-link:not(.is-featured) .icon {
+    color: var(--color-accent);
+  }
+
+  .social-link[aria-label='邮箱'] {
+    width: 54px;
+    padding: 0;
+  }
+
+  .social-link[aria-label='邮箱'] span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+---
+
+<section class="calendar-widget glass-panel" aria-label="日历">
+  <div class="calendar-title" data-calendar-title></div>
+  <div class="calendar-week">
+    <span>一</span>
+    <span>二</span>
+    <span>三</span>
+    <span>四</span>
+    <span>五</span>
+    <span>六</span>
+    <span>日</span>
+  </div>
+  <div class="calendar-grid" data-calendar-grid></div>
+</section>
+
+<script>
+  function mountCalendarWidgets() {
+    document.querySelectorAll('.calendar-widget').forEach((calendar) => {
+      if (!(calendar instanceof HTMLElement)) return;
+      const title = calendar.querySelector('[data-calendar-title]');
+      const grid = calendar.querySelector('[data-calendar-grid]');
+      if (!title || !grid) return;
+
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const today = now.getDate();
+      const dayNames = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      title.textContent = `${year}/${month + 1}/${today} ${dayNames[now.getDay()]}`;
+
+      const firstDay = new Date(year, month, 1);
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const offset = (firstDay.getDay() + 6) % 7;
+      const cells = [];
+
+      for (let i = 0; i < offset; i += 1) cells.push('<span></span>');
+      for (let day = 1; day <= daysInMonth; day += 1) {
+        cells.push(`<span class="${day === today ? 'is-today' : ''}">${day}</span>`);
+      }
+
+      grid.innerHTML = cells.join('');
+    });
+  }
+
+  mountCalendarWidgets();
+  document.addEventListener('astro:page-load', mountCalendarWidgets);
+</script>
+
+<style>
+  .calendar-widget {
+    padding: 28px 30px 30px;
+  }
+
+  .calendar-title {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 18px;
+    color: var(--color-muted);
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .calendar-week,
+  .calendar-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(28px, 1fr));
+    gap: 14px 10px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .calendar-week {
+    margin-bottom: 14px;
+    color: var(--color-muted);
+    font-size: 15px;
+  }
+
+  .calendar-grid span {
+    display: grid;
+    min-width: 30px;
+    min-height: 30px;
+    place-items: center;
+    border-radius: 10px;
+    color: var(--color-muted);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .calendar-grid .is-today {
+    background: var(--color-accent);
+    color: white;
+    box-shadow: 0 8px 18px rgba(53, 199, 182, 0.24);
+  }
+</style>
