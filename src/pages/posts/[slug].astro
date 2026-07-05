@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { articles, site } from '@/data/site';
+
+export function getStaticPaths() {
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+---
+
+<BaseLayout title={`${article.title} | ${site.name}`} description={article.summary}>
+  <main class="page-main post-shell">
+    <a class="back-link" href="/blog">← Back to writing</a>
+    <header class="page-header">
+      <p class="section-kicker">{article.tags.join(' / ')}</p>
+      <h1>{article.title}</h1>
+      <p>{article.summary}</p>
+    </header>
+    <article class="post-body glass-card">
+      <p>这是一篇占位文章，用来验证静态路由、文章入口和阅读页面的视觉基调。</p>
+      <p>后续可以把这里替换为 Astro Content Collections 或 MDX 文件，让文章从 Markdown 自动生成。</p>
+      <p>当前首版重点是首页滚动叙事、玻璃拟态、黑白 light 风格和基础交互。</p>
+    </article>
+  </main>
+</BaseLayout>

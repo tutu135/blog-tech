@@ -1,290 +1,251 @@
 ---
-import { getCollection } from 'astro:content';
-import DashboardLayout from '../layouts/DashboardLayout.astro';
-import ColumnCard from '../components/cards/ColumnCard.astro';
-import Icon from '../components/ui/Icon.astro';
-import ProfileNav from '../components/widgets/ProfileNav.astro';
-import HeroSticker from '../components/widgets/HeroSticker.astro';
-import GreetingWidget from '../components/widgets/GreetingWidget.astro';
-import ClockWidget from '../components/widgets/ClockWidget.astro';
-import CalendarWidget from '../components/widgets/CalendarWidget.astro';
-import SocialDock from '../components/widgets/SocialDock.astro';
-import LatestArticleWidget from '../components/widgets/LatestArticleWidget.astro';
-import RecommendationWidget from '../components/widgets/RecommendationWidget.astro';
-import MusicWidget from '../components/widgets/MusicWidget.astro';
-import FloatingLike from '../components/widgets/FloatingLike.astro';
-import { dashboard, site } from '../data/site';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { articles, navItems, projects, site, skills } from '@/data/site';
 
-const columns = (await getCollection('columns')).sort(
-  (a, b) => Number(b.data.year) - Number(a.data.year),
-);
-
-const articles = (await getCollection('articles')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-
-const latestArticle = articles[0];
+const uniqueTags = Array.from(new Set(articles.flatMap((article) => article.tags)));
 ---
 
-<DashboardLayout title={`${site.name} · ${site.title}`}>
-  <div class="dashboard-board">
-    <div class="profile-slot">
-      <ProfileNav />
-    </div>
-
-    <div class="hero-slot">
-      <HeroSticker />
-    </div>
-
-    <div class="write-slot">
-      <a class="write-action" href={dashboard.writingHref}>
-        <Icon name="pencil" />
-        <span>写文章</span>
+<BaseLayout title={`${site.name} | Personal Blog`} description={site.description}>
+  <div class="site-shell">
+    <header class="top-nav" aria-label="Primary navigation">
+      <a class="brand" href="#about" aria-label={`${site.name} home`}>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>{site.name}</span>
       </a>
-      <div class="dot-grid" aria-hidden="true">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
+      <nav class="nav-links" aria-label="Sections">
+        {navItems.map((item) => (
+          <a class="nav-link" href={item.href} data-nav-link={item.href.slice(1)}>{item.label}</a>
+        ))}
+      </nav>
+      <div class="nav-meta" aria-label="Site metadata">
+        <span>{site.location}</span>
+        <span class="language-pill">{site.language}</span>
       </div>
-    </div>
+    </header>
 
-    <div class="hello-slot">
-      <GreetingWidget />
-    </div>
+    <main>
+      <section id="about" class="hero" data-section="about" aria-label="Introduction">
+        <div class="hero-visual" aria-hidden="true">
+          <span class="shape shape-circle"></span>
+          <span class="shape shape-ring"></span>
+          <span class="shape shape-line"></span>
+          <span class="shape shape-triangle"></span>
+        </div>
+        <h1 class="hero-title">{site.title}</h1>
+        <a class="scroll-cue" href="#skills" aria-label="Scroll to skills">
+          <span>Scroll to explore</span>
+          <span class="scroll-dot" aria-hidden="true"></span>
+        </a>
+      </section>
 
-    <div class="clock-slot">
-      <ClockWidget />
-    </div>
+      <section id="skills" class="section" data-section="skills" aria-labelledby="skills-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-kicker">Capability</p>
+            <h2 id="skills-title" class="section-title">专业技能</h2>
+          </div>
+          <p class="section-copy">先用占位内容描述能力边界。每张卡片在滚动时逐张进入，保持一页式叙事的节奏。</p>
+        </div>
+        <div class="skills-grid">
+          {skills.map((skill, index) => (
+            <article class="glass-card skill-card reveal tilt-card" style={`--delay: ${index * 90}ms`}>
+              <span class="skill-index">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{skill.name}</h3>
+              <p>{skill.summary}</p>
+              <div class="tag-row" aria-label={`${skill.name} tags`}>
+                {skill.tags.map((tag) => <span class="tag">{tag}</span>)}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
-    <div class="latest-slot">
-      <LatestArticleWidget article={latestArticle} />
-    </div>
+      <section id="projects" class="section" data-section="projects" aria-labelledby="projects-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-kicker">Selected Work</p>
+            <h2 id="projects-title" class="section-title">项目展示</h2>
+          </div>
+          <p class="section-copy">项目先用占位数据。大卡片承担主视觉，信息保持短句，之后可以替换成真实项目。</p>
+        </div>
+        <div class="projects-list">
+          {projects.map((project, index) => (
+            <article
+              class="glass-card project-card reveal tilt-card"
+              data-number={String(index + 1).padStart(2, '0')}
+              style={`--delay: ${index * 110}ms`}
+            >
+              <h3>{project.title}</h3>
+              <p>{project.summary}</p>
+              <div class="tag-row" aria-label={`${project.title} tags`}>
+                {project.tags.map((tag) => <span class="tag">{tag}</span>)}
+              </div>
+              <span class="project-meta">{project.year}</span>
+            </article>
+          ))}
+        </div>
+      </section>
 
-    <div class="calendar-slot">
-      <CalendarWidget />
-    </div>
-
-    <div class="social-slot">
-      <SocialDock />
-    </div>
-
-    <div class="recommend-slot">
-      <RecommendationWidget />
-    </div>
-
-    <div class="music-slot">
-      <MusicWidget />
-    </div>
-
-    <div class="like-slot">
-      <FloatingLike />
-    </div>
+      <section id="writing" class="section" data-section="writing" aria-labelledby="writing-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-kicker">Writing</p>
+            <h2 id="writing-title" class="section-title">文章记录</h2>
+          </div>
+          <p class="section-copy">文章区保留简单搜索和标签筛选，首版仍然是轻量静态交互，不引入后台或数据库。</p>
+        </div>
+        <div class="glass-card writing-panel reveal">
+          <div class="writing-tools">
+            <label>
+              <span class="section-kicker">Search</span>
+              <input class="search-field" type="search" placeholder="搜索标题、摘要或标签" data-search />
+            </label>
+            <div class="filter-row" aria-label="Article filters">
+              <button class="filter-button is-active" type="button" data-filter="all">All</button>
+              {uniqueTags.map((tag) => <button class="filter-button" type="button" data-filter={tag}>{tag}</button>)}
+            </div>
+          </div>
+          <div class="article-list" data-article-list>
+            {articles.map((article, index) => (
+              <a
+                class="article-card reveal"
+                href={`/posts/${article.slug}`}
+                data-article
+                data-title={article.title}
+                data-summary={article.summary}
+                data-tags={article.tags.join(' ')}
+                style={`--delay: ${index * 90}ms`}
+              >
+                <time class="article-date" datetime={article.date}>{article.date}</time>
+                <span>
+                  <h3>{article.title}</h3>
+                  <p>{article.summary}</p>
+                </span>
+                <span class="article-arrow" aria-hidden="true">→</span>
+              </a>
+            ))}
+          </div>
+          <p class="empty-state" data-empty-state>没有找到匹配的文章。</p>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <section id="columns" class="columns-section">
-    <div class="section-head">
-      <div>
-        <span>PROJECTS</span>
-        <h2>我的项目与专栏</h2>
-      </div>
-      <p>保留原来玻璃卡片的配色和鼠标交互，把内容入口整理成更稳定的卡片网格。</p>
-    </div>
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const navLinks = Array.from(document.querySelectorAll('[data-nav-link]'));
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-section]'));
+    const revealItems = Array.from(document.querySelectorAll('.reveal'));
+    const heroVisual = document.querySelector<HTMLElement>('.hero-visual');
 
-    <div class="columns-grid">
-      {columns.map((column) => (
-        <ColumnCard
-          href={`/columns/${column.id}/`}
-          icon={column.data.icon}
-          title={column.data.title}
-          meta={column.data.year}
-          tag={column.data.tag}
-          description={column.data.summary}
-          transitionName={`column-${column.id}`}
-        />
-      ))}
-    </div>
-  </section>
-</DashboardLayout>
+    const setActiveSection = (id: string | null) => {
+      navLinks.forEach((link) => {
+        link.classList.toggle('is-active', link.getAttribute('data-nav-link') === id);
+      });
+    };
 
-<style>
-  .dashboard-board {
-    display: grid;
-    max-width: var(--dashboard-width);
-    margin: 0 auto;
-    grid-template-columns: minmax(270px, 330px) minmax(360px, 1fr) minmax(260px, 330px);
-    grid-template-areas:
-      'profile hero write'
-      'profile hello clock'
-      'latest hello calendar'
-      'latest social calendar'
-      '. recommend music'
-      '. recommend like';
-    gap: 24px;
-    align-items: start;
-  }
+    const updateActiveSection = () => {
+      const marker = window.innerHeight * 0.38;
+      let current = sections[0];
 
-  .dashboard-board > * {
-    min-width: 0;
-  }
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= marker && rect.bottom >= marker) {
+          current = section;
+        }
+      });
 
-  .profile-slot { grid-area: profile; }
-  .hero-slot { grid-area: hero; }
-  .write-slot { grid-area: write; }
-  .hello-slot { grid-area: hello; }
-  .clock-slot { grid-area: clock; }
-  .latest-slot { grid-area: latest; }
-  .calendar-slot { grid-area: calendar; }
-  .social-slot { grid-area: social; }
-  .recommend-slot { grid-area: recommend; }
-  .music-slot { grid-area: music; align-self: end; }
-  .like-slot { grid-area: like; justify-self: start; }
+      setActiveSection(current?.getAttribute('data-section') || 'about');
+    };
 
-  .write-slot {
-    display: flex;
-    min-height: 64px;
-    align-items: center;
-    gap: 30px;
-    padding-top: 6px;
-  }
+    updateActiveSection();
+    window.addEventListener('scroll', updateActiveSection, { passive: true });
 
-  .write-action {
-    display: inline-flex;
-    min-height: 54px;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 0 28px;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 12px;
-    background: linear-gradient(135deg, #43d4c4, #2ebaaa);
-    color: white;
-    font-size: 17px;
-    font-weight: 700;
-    text-decoration: none;
-    box-shadow: 0 14px 28px rgba(53, 199, 182, 0.22);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-  }
+    if ('IntersectionObserver' in window) {
+      const sectionObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) updateActiveSection();
+      }, { threshold: [0.35, 0.55, 0.75] });
 
-  .write-action:hover {
-    box-shadow: 0 18px 36px rgba(53, 199, 182, 0.3);
-    transform: translateY(-2px);
-  }
+      sections.forEach((section) => sectionObserver.observe(section));
 
-  .dot-grid {
-    display: grid;
-    width: 32px;
-    height: 32px;
-    grid-template-columns: repeat(3, 4px);
-    grid-auto-rows: 4px;
-    gap: 7px;
-    place-content: center;
-  }
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
 
-  .dot-grid span {
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.7);
-  }
-
-  .columns-section {
-    max-width: var(--dashboard-width);
-    margin: 74px auto 0;
-  }
-
-  .section-head {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 28px;
-    margin-bottom: 24px;
-  }
-
-  .section-head span {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--color-accent-strong);
-    font-size: 13px;
-    font-weight: 700;
-  }
-
-  .section-head h2 {
-    color: var(--color-ink-strong);
-    font-size: 28px;
-    line-height: 1.2;
-  }
-
-  .section-head p {
-    max-width: 420px;
-    color: var(--color-muted);
-    font-size: 14px;
-    line-height: 1.7;
-  }
-
-  .columns-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-  }
-
-  @media (max-width: 1120px) {
-    .dashboard-board {
-      max-width: 840px;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-areas:
-        'hero hero'
-        'profile hello'
-        'latest clock'
-        'social calendar'
-        'recommend calendar'
-        'write music'
-        'like like';
+      revealItems.forEach((item) => revealObserver.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
     }
 
-    .write-slot {
-      padding-top: 0;
-    }
-  }
-
-  @media (max-width: 760px) {
-    .dashboard-board {
-      max-width: 520px;
-      grid-template-columns: 1fr;
-      grid-template-areas:
-        'hero'
-        'profile'
-        'hello'
-        'write'
-        'clock'
-        'calendar'
-        'latest'
-        'social'
-        'recommend'
-        'music'
-        'like';
-      gap: 18px;
+    if (!reduceMotion && heroVisual) {
+      window.addEventListener('pointermove', (event) => {
+        const x = event.clientX - window.innerWidth / 2;
+        const y = event.clientY - window.innerHeight / 2;
+        heroVisual.style.setProperty('--mx', `${x}px`);
+        heroVisual.style.setProperty('--my', `${y}px`);
+      }, { passive: true });
     }
 
-    .write-slot {
-      justify-content: space-between;
+    if (!reduceMotion) {
+      document.querySelectorAll<HTMLElement>('.tilt-card').forEach((card) => {
+        card.addEventListener('pointermove', (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          card.style.setProperty('--tilt-x', `${y * -4}deg`);
+          card.style.setProperty('--tilt-y', `${x * 5}deg`);
+        });
+        card.addEventListener('pointerleave', () => {
+          card.style.setProperty('--tilt-x', '0deg');
+          card.style.setProperty('--tilt-y', '0deg');
+        });
+      });
     }
 
-    .section-head {
-      display: block;
-    }
+    const search = document.querySelector<HTMLInputElement>('[data-search]');
+    const filterButtons = Array.from(document.querySelectorAll('[data-filter]'));
+    const articles = Array.from(document.querySelectorAll<HTMLElement>('[data-article]'));
+    const emptyState = document.querySelector('[data-empty-state]');
+    let activeFilter = 'all';
 
-    .section-head p {
-      margin-top: 12px;
-    }
+    const normalize = (value: string) => value.toLowerCase().trim();
 
-    .columns-grid {
-      grid-template-columns: 1fr;
-    }
-  }
+    const applyArticleFilters = () => {
+      const query = normalize(search?.value || '');
+      let visibleCount = 0;
 
-  @media (max-width: 420px) {
-    .write-action {
-      min-height: 50px;
-      padding: 0 20px;
-      font-size: 15px;
-    }
-  }
-</style>
+      articles.forEach((article) => {
+        const haystack = normalize([
+          article.getAttribute('data-title'),
+          article.getAttribute('data-summary'),
+          article.getAttribute('data-tags'),
+        ].join(' '));
+        const tags = article.getAttribute('data-tags') || '';
+        const matchesQuery = !query || haystack.includes(query);
+        const matchesFilter = activeFilter === 'all' || tags.includes(activeFilter);
+        const isVisible = matchesQuery && matchesFilter;
+        article.hidden = !isVisible;
+        if (isVisible) visibleCount += 1;
+      });
+
+      emptyState?.classList.toggle('is-visible', visibleCount === 0);
+    };
+
+    search?.addEventListener('input', applyArticleFilters);
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeFilter = button.getAttribute('data-filter') || 'all';
+        filterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+        applyArticleFilters();
+      });
+    });
+  </script>
+</BaseLayout>

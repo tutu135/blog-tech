@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { articles, site } from '@/data/site';
+---
+
+<BaseLayout title={`Writing | ${site.name}`} description="Placeholder writing index.">
+  <main class="page-main">
+    <header class="page-header">
+      <a class="back-link" href="/">← Back home</a>
+      <h1>Writing</h1>
+      <p>这里预留为后续文章索引页。当前文章来自本地占位数据，之后可以替换为 Markdown 内容集合。</p>
+    </header>
+    <div class="article-list">
+      {articles.map((article) => (
+        <a class="article-card glass-card" href={`/posts/${article.slug}`}>
+          <time class="article-date" datetime={article.date}>{article.date}</time>
+          <span>
+            <h3>{article.title}</h3>
+            <p>{article.summary}</p>
+          </span>
+          <span class="article-arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </main>
+</BaseLayout>
