@@ -108,7 +108,7 @@ const uniqueTags = Array.from(new Set(articles.flatMap((article) => article.tags
           <div class="article-list" data-article-list>
             {articles.map((article, index) => (
               <a
-                class="article-card reveal"
+                class="article-card reveal tilt-card"
                 href={`/posts/${article.slug}`}
                 data-article
                 data-title={article.title}
@@ -196,16 +196,46 @@ const uniqueTags = Array.from(new Set(articles.flatMap((article) => article.tags
 
     if (!reduceMotion) {
       document.querySelectorAll<HTMLElement>('.tilt-card').forEach((card) => {
-        card.addEventListener('pointermove', (event) => {
+        const setCardLight = (event: PointerEvent) => {
           const rect = card.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / rect.width - 0.5;
-          const y = (event.clientY - rect.top) / rect.height - 0.5;
-          card.style.setProperty('--tilt-x', `${y * -4}deg`);
-          card.style.setProperty('--tilt-y', `${x * 5}deg`);
+          const localX = event.clientX - rect.left;
+          const localY = event.clientY - rect.top;
+          const x = localX / rect.width - 0.5;
+          const y = localY / rect.height - 0.5;
+
+          card.style.setProperty('--light-x', `${localX}px`);
+          card.style.setProperty('--light-y', `${localY}px`);
+          card.style.setProperty('--tilt-x', `${y * -5}deg`);
+          card.style.setProperty('--tilt-y', `${x * 7}deg`);
+        };
+
+        card.addEventListener('pointerenter', (event) => {
+          card.classList.add('is-pointer-active');
+          setCardLight(event);
         });
+
+        card.addEventListener('pointermove', (event) => {
+          setCardLight(event);
+        });
+
         card.addEventListener('pointerleave', () => {
+          card.classList.remove('is-pointer-active');
+          card.style.setProperty('--light-x', '50%');
+          card.style.setProperty('--light-y', '50%');
           card.style.setProperty('--tilt-x', '0deg');
           card.style.setProperty('--tilt-y', '0deg');
+        });
+
+        card.addEventListener('focusin', () => {
+          card.classList.add('is-pointer-active');
+          card.style.setProperty('--light-x', '50%');
+          card.style.setProperty('--light-y', '18%');
+        });
+
+        card.addEventListener('focusout', () => {
+          card.classList.remove('is-pointer-active');
+          card.style.setProperty('--light-x', '50%');
+          card.style.setProperty('--light-y', '50%');
         });
       });
     }
