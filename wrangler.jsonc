@@ -1,4 +1,14 @@
 {
   "name": "blog-tech",
-  "pages_build_output_dir": "./dist"
+  "compatibility_date": "2026-07-06",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    {
+      "pattern": "tech.jimmy136.xyz",
+      "custom_domain": true
+    }
+  ]
 }
