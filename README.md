@@ -1,4 +1,4 @@
-# YOVO Blog
+# JIMMY Blog
 
 Apple-style one-page personal blog built with Astro.
 

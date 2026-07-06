@@ -1,6 +1,6 @@
 export const site = {
-  name: 'YOVO',
-  title: "HELLO, I'M YOVO",
+  name: 'JIMMY',
+  title: "HELLO, I'M JIMMY",
   location: 'Haikou',
   language: 'CN / EN',
   description: '一页式个人技术博客，记录 AI、Web 与系统设计实践。',
