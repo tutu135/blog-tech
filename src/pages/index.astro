@@ -68,20 +68,21 @@ const uniqueTags = Array.from(new Set(articles.flatMap((article) => article.tags
           </div>
           <p class="section-copy">这里记录我做过的工具和正在探索的想法，从日常使用的工作站到 AI 与 Web 项目。</p>
         </div>
-        <div class="article-list">
+        <div class="projects-list">
           {projects.map((project, index) => (
             <a
-              class="article-card project-card reveal tilt-card"
+              class="glass-card project-card reveal tilt-card"
               href={`/projects/${project.slug}`}
               aria-labelledby={`project-title-${project.slug}`}
-              style={`--delay: ${index * 90}ms`}
+              data-number={String(index + 1).padStart(2, '0')}
+              style={`--delay: ${index * 110}ms`}
             >
-              <span class="article-date">{project.year}</span>
-              <div>
-                <h3 id={`project-title-${project.slug}`}>{project.title}</h3>
-                <p>{project.summary}</p>
+              <h3 id={`project-title-${project.slug}`}>{project.title}</h3>
+              <p>{project.summary}</p>
+              <div class="tag-row" aria-label={`${project.title} tags`}>
+                {project.tags.map((tag) => <span class="tag">{tag}</span>)}
               </div>
-              <span class="article-arrow" aria-hidden="true">→</span>
+              <span class="project-meta">{project.year}</span>
             </a>
           ))}
         </div>
