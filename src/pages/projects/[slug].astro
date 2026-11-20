@@ -3,10 +3,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { projects, site } from '@/data/site';
 
 export function getStaticPaths() {
-  return projects.map((project) => ({
+  return projects.flatMap((project) => project.slug ? [{
     params: { slug: project.slug },
     props: { project },
-  }));
+  }] : []);
 }
 
 const { project } = Astro.props;

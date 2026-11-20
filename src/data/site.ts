@@ -51,6 +51,24 @@ export const projects = [
     motivation: '一件想做的事可能记在聊天里，一篇想读的文章则留在浏览器标签页。等有空回来处理时，还得先想起它们放在哪里。我做这个工作台，是想给这些暂时顾不上的东西一个固定的入口。',
     example: '比如聊到一个博客改进点，我可以先在聊天里确认要记录的事项，再把它存入工作站的「想做清单」。下次有空改博客时，打开清单就能找到这条记录。',
   },
+  {
+    title: '智能客服 Agent 平台',
+    year: '2026',
+    summary: '多轮对话、工具调用和知识库检索的占位项目，用于展示 AI Agent 架构设计。',
+    tags: ['LLM', 'RAG', 'Agent'],
+  },
+  {
+    title: '自动化流程引擎',
+    year: '2026',
+    summary: '面向工作流编排、任务调度和执行监控的占位项目。',
+    tags: ['Workflow', 'Web', 'Automation'],
+  },
+  {
+    title: '个人知识索引',
+    year: '2026',
+    summary: '把阅读、代码片段和技术文章组织成可检索知识网络的占位项目。',
+    tags: ['Notes', 'Search', 'PKM'],
+  },
 ];
 
 export const articles = [

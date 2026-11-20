@@ -491,7 +491,23 @@ button {
 }
 
 .project-card {
+  position: relative;
+  min-height: 300px;
   padding: 42px;
+  overflow: hidden;
+}
+
+.project-card::after {
+  position: absolute;
+  top: 32px;
+  right: 38px;
+  z-index: 1;
+  pointer-events: none;
+  color: rgba(10, 10, 12, 0.055);
+  content: attr(data-number);
+  font-size: 5rem;
+  font-weight: 850;
+  line-height: 1;
 }
 
 .project-card h3 {
@@ -505,39 +521,18 @@ button {
   font-size: 1.05rem;
 }
 
-.project-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 30px;
-}
-
-.project-link {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  gap: 10px;
-  padding: 0 16px;
-  color: #fff;
-  background: var(--ink);
-  border-radius: var(--radius);
+.project-meta {
+  display: block;
+  margin-top: 54px;
+  color: var(--soft);
   font-weight: 800;
 }
 
-.project-link:hover {
-  background: #333;
-}
-
-.project-link:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 4px;
-}
-
-.project-meta {
+.project-link {
+  margin-inline-start: 16px;
   color: var(--muted);
-  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .writing-panel {
