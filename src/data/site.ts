@@ -53,21 +53,30 @@ export const projects = [
   },
   {
     title: '智能客服 Agent 平台',
+    slug: 'customer-support-agent',
     year: '2026',
     summary: '多轮对话、工具调用和知识库检索的占位项目，用于展示 AI Agent 架构设计。',
     tags: ['LLM', 'RAG', 'Agent'],
+    motivation: '这个构想把对话、知识库检索和业务工具放进同一个客服流程。客服助手先理解用户的问题，再判断该查资料、调用工具，还是转交给人工处理。',
+    example: '比如用户想查退款进度。助手可以先确认订单信息，再查询状态；如果查不到结果，就把上下文交给人工客服。',
   },
   {
     title: '自动化流程引擎',
+    slug: 'automation-workflow-engine',
     year: '2026',
     summary: '面向工作流编排、任务调度和执行监控的占位项目。',
     tags: ['Workflow', 'Web', 'Automation'],
+    motivation: '这个构想把重复执行的流程拆成有依赖关系的任务。执行记录可以用来查看每一步的状态，并定位失败出在哪一步。',
+    example: '比如每天生成一份报表。流程可以先拉取数据，再计算指标并生成报表；拉取失败时，流程停在对应步骤，便于定位问题。',
   },
   {
     title: '个人知识索引',
+    slug: 'personal-knowledge-index',
     year: '2026',
     summary: '把阅读、代码片段和技术文章组织成可检索知识网络的占位项目。',
     tags: ['Notes', 'Search', 'PKM'],
+    motivation: '这个构想为笔记、代码片段和技术文章提供一个共同的搜索入口，并用主题把相关内容串起来。',
+    example: '比如重新做一个检索功能时，可以按主题找到以前收藏的文章、自己的笔记和试过的代码片段。',
   },
 ];
 
