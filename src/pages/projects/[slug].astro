@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { projects, site } from '@/data/site';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<BaseLayout title={`${project.title} | ${site.name}`} description={project.summary}>
+  <main class="page-main post-shell">
+    <a class="back-link" href="/#projects">← 返回项目展示</a>
+    <header class="page-header">
+      <h1>{project.title}</h1>
+      <p>{project.summary}</p>
+    </header>
+    <article class="post-body project-body glass-card">
+      <h2>为什么做这个工作站</h2>
+      <p>{project.motivation}</p>
+      <h2>平时怎么用</h2>
+      <p>{project.example}</p>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .project-body h2 {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .project-body p:last-child {
+    margin-bottom: 0;
+  }
+</style>

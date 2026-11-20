@@ -66,21 +66,21 @@ const uniqueTags = Array.from(new Set(articles.flatMap((article) => article.tags
             <p class="section-kicker">Selected Work</p>
             <h2 id="projects-title" class="section-title">项目展示</h2>
           </div>
-          <p class="section-copy">项目先用占位数据。大卡片承担主视觉，信息保持短句，之后可以替换成真实项目。</p>
         </div>
         <div class="projects-list">
-          {projects.map((project, index) => (
-            <article
-              class="glass-card project-card reveal tilt-card"
-              data-number={String(index + 1).padStart(2, '0')}
-              style={`--delay: ${index * 110}ms`}
-            >
+          {projects.map((project) => (
+            <article class="glass-card project-card">
               <h3>{project.title}</h3>
               <p>{project.summary}</p>
               <div class="tag-row" aria-label={`${project.title} tags`}>
                 {project.tags.map((tag) => <span class="tag">{tag}</span>)}
               </div>
-              <span class="project-meta">{project.year}</span>
+              <div class="project-footer">
+                <a class="project-link" href={`/projects/${project.slug}`}>
+                  查看项目介绍 <span aria-hidden="true">→</span>
+                </a>
+                <time class="project-meta" datetime={project.year}>{project.year}</time>
+              </div>
             </article>
           ))}
         </div>
